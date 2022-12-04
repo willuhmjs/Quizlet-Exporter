@@ -6,14 +6,14 @@
 		const parsedData = await parse(file);
 		const fileBlob = await docx(parsedData);
 		// TODO better way to do
-		download(fileBlob, "file.docx");
+		download(fileBlob,  file.name.replace('.html', '.docx'));
 	}
 
 	let files: FileList;
 </script>
 
 <label for="avatar">Upload an HTML file:</label>
-<input accept=".html,.htm,.mhtml" bind:files name="html" type="file" />
+<input accept=".html" bind:files name="html" type="file" />
 
 {#if files}
 	{#each Array.from(files) as file}
