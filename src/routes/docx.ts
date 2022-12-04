@@ -1,9 +1,5 @@
 import { Table, Paragraph, TableCell, TableRow, Document, Packer, TextRun } from 'docx';
-
-export interface Card {
-	term: string;
-	definition: string;
-}
+import type { Card } from "./card";
 
 function toRow(card: Card): InstanceType<typeof TableRow> {
 	return new TableRow({
@@ -27,7 +23,7 @@ function toRow(card: Card): InstanceType<typeof TableRow> {
 	});
 }
 
-export default async function MakeDoc(cards: Card[]): Promise<Buffer> {
+export default async function MakeDoc(cards: Card[]): Promise<Blob> {
 	let rowArray: TableRow[] = cards.map((card) => toRow(card));
 
 	const table = new Table({
@@ -42,5 +38,5 @@ export default async function MakeDoc(cards: Card[]): Promise<Buffer> {
 		]
 	});
 
-	return await Packer.toBuffer(doc);
+	return await Packer.toBlob(doc);
 }

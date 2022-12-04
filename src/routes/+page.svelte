@@ -1,9 +1,12 @@
 <script lang="ts">
 	import parse from './parser';
 	import docx from './docx';
-
+	import download from './download';
 	async function createDocx(file: File) {
 		const parsedData = await parse(file);
+		const fileBlob = await docx(parsedData);
+		// TODO better way to do
+		download(fileBlob, "file.docx");
 	}
 
 	let files: FileList;
@@ -16,8 +19,8 @@
 	{#each Array.from(files) as file}
 		${#await createDocx(file)}
 			<p>Loading...</p>
-		{:then buffer}
-			<pre>{buffer}</pre>
+		{:then}
+			<pre>File has been downloaded successfully.</pre>
 		{:catch error}
 			<pre>{error}</pre>
 		{/await}
