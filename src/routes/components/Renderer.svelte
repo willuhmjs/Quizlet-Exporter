@@ -3,10 +3,9 @@
 	import docx from '../lib/docx';
 	import download from '../lib/download';
 	async function createDocx(file: File) {
-		//const parsedData = await parse(file);
-		//const fileBlob = await docx(parsedData);
-		// TODO better way to do
-		//download(fileBlob, file.name.replace('.html', '.docx'));
+		const parsedData = await parse(file);
+		const fileBlob = await docx(parsedData);
+		download(fileBlob, file.name.replace('.html', '.docx'));
 	}
 
 	let files: FileList;
