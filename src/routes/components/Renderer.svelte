@@ -36,7 +36,7 @@
         <h3>How to use:</h3>
         <ol>
             <li>Go to the Quizlet study set.</li>
-            <li>Do Ctrl/Cmd + S and save the page as "Webpage, HTML Only"</li>
+            <li>Press <kbd>ctrl/cmd + s</kbd> and save the page as "Webpage, HTML Only"</li>
             <li>Upload the HTML file to the website.</li>
             <li>Enjoy your newly created Word document!</li>
         </ol>
@@ -76,5 +76,12 @@
 
     .rightSide {
         width: 50%;
+    }
+
+    kbd {
+        background: #eee;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-size: 0.8em;
     }
 </style>
