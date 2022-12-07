@@ -1,4 +1,4 @@
-import type { Card } from "./card";
+import type { Card } from './card';
 
 export default async function (file: File): Promise<Card[]> {
 	const text = await file.text();
@@ -11,6 +11,6 @@ export default async function (file: File): Promise<Card[]> {
 		(e) => e.textContent
 	);
 	return term.map((t, i) => {
-		return { term: ""+t, definition: ""+definition[i] }
+		return { term: '' + t, definition: '' + definition[i] };
 	});
 }

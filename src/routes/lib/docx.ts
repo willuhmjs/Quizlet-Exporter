@@ -1,5 +1,5 @@
 import { Table, Paragraph, TableCell, TableRow, Document, Packer, TextRun, WidthType } from 'docx';
-import type { Card } from "./card";
+import type { Card } from './card';
 
 function toRow(card: Card): InstanceType<typeof TableRow> {
 	return new TableRow({
