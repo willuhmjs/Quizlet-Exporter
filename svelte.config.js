@@ -10,7 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		paths: {
-			base: "/Quizlet-Exporter"
+			base: '/Quizlet-Exporter'
 		}
 	}
 };
