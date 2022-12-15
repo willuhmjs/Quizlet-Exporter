@@ -10,3 +10,6 @@ https://willuhm-js.github.io/Quizlet-Exporter/
 yarn
 yarn dev
 ```
+
+## License
+**Quizlet-Exporter** is licensed under the [MIT License](LICENSE).
