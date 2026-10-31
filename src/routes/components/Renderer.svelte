@@ -298,9 +298,10 @@
 	}
 
 	.results li {
-		display: flex;
-		align-items: baseline;
-		gap: 10px;
+		display: grid;
+		grid-template-columns: 7px minmax(0, 38%) minmax(0, 1fr);
+		align-items: center;
+		gap: 12px;
 		padding: 12px 16px;
 		border: 1px solid rgba(255, 255, 255, 0.08);
 		border-radius: 8px;
@@ -312,8 +313,6 @@
 		width: 7px;
 		height: 7px;
 		border-radius: 50%;
-		flex-shrink: 0;
-		align-self: center;
 		background: #62666d;
 	}
 
@@ -335,7 +334,9 @@
 		font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 		font-size: 13px;
 		color: #f7f8f8;
-		overflow-wrap: anywhere;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.results .msg {
@@ -370,6 +371,7 @@
 		border: 1px solid rgba(255, 255, 255, 0.05);
 		border-radius: 8px;
 		background: rgba(255, 255, 255, 0.02);
+		overflow-wrap: anywhere;
 	}
 
 	.step-num {
@@ -402,6 +404,8 @@
 		border-radius: 4px;
 		padding: 1px 5px;
 		color: #d0d6e0;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
 	}
 
 	footer {
