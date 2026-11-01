@@ -44,10 +44,15 @@
 			}
 			const fileBlob = await docx(parsedData);
 			download(fileBlob, file.name.replace(/\.x?html?$/i, '.docx'));
+			const missing = parsedData.filter((c) => !c.definition).length;
 			update(
 				entry.id,
 				'ok',
-				`exported ${parsedData.length} card${parsedData.length === 1 ? '' : 's'}`
+				`exported ${parsedData.length} card${parsedData.length === 1 ? '' : 's'}${
+					missing > 0
+						? ` · ${missing} missing a definition, flip through all cards before saving`
+						: ''
+				}`
 			);
 		} catch (error) {
 			update(entry.id, 'error', `failed: ${error}`);

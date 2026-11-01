@@ -25,20 +25,33 @@ function cardsFromPairs(fronts: Element[], backs: Element[]): Card[] {
 }
 
 // Current Quizlet (2024+): obfuscated classes, but stable data-testid sides,
-// alternating term/definition in document order.
+// alternating term/definition in document order. Study-mode ("Flashcards")
+// pages list all cards too, but the last card may be saved mid-flip, leaving
+// an odd number of sides: pair what exists and keep the orphan term.
 function parseModern(doc: Document): Card[] {
 	const sides = Array.from(doc.querySelectorAll('[data-testid="set-page-term-card-side"]'));
-	if (sides.length >= 2 && sides.length % 2 === 0) {
+	if (sides.length >= 2) {
+		if (sides.every((s) => s.hasAttribute('data-face'))) {
+			const fronts = sides.filter((s) => s.getAttribute('data-face') === 'front');
+			const backs = sides.filter((s) => s.getAttribute('data-face') === 'back');
+			if (fronts.length > 0 && backs.length === fronts.length) {
+				return cardsFromPairs(fronts, backs);
+			}
+		}
 		return cardsFromPairs(
 			sides.filter((_, i) => i % 2 === 0),
 			sides.filter((_, i) => i % 2 === 1)
 		);
 	}
-	// Flip-card variant with explicit front/back faces.
-	const fronts = Array.from(doc.querySelectorAll('[data-testid="set-page-term-card-side"][data-face="front"], [data-testid="Card-front"]'));
-	const backs = Array.from(doc.querySelectorAll('[data-testid="set-page-term-card-side"][data-face="back"], [data-testid="Card-back"]'));
-	if (fronts.length > 0 && backs.length === fronts.length) {
-		return cardsFromPairs(fronts, backs);
+	// Explicit Card-front/Card-back widgets, only when no side list exists at
+	// all: on study-mode pages these testids appear on the single current card
+	// preview, so they must never outrank the terms list above.
+	if (sides.length === 0) {
+		const fronts = Array.from(doc.querySelectorAll('[data-testid="Card-front"]'));
+		const backs = Array.from(doc.querySelectorAll('[data-testid="Card-back"]'));
+		if (fronts.length > 0 && backs.length === fronts.length) {
+			return cardsFromPairs(fronts, backs);
+		}
 	}
 	return [];
 }
