@@ -2,6 +2,7 @@
 	import parse from '../lib/parser';
 	import docx from '../lib/docx';
 	import download from '../lib/download';
+	import { onMount } from 'svelte';
 
 	type Entry = { id: number; name: string; state: 'busy' | 'ok' | 'error'; message: string };
 
@@ -9,6 +10,20 @@
 	let entries: Entry[] = [];
 	let dragging = false;
 	let nextId = 1;
+	let stars: number | null = null;
+
+	const REPO_URL = 'https://github.com/willuhmjs/Quizlet-Exporter';
+
+	onMount(async () => {
+		try {
+			const res = await fetch('https://api.github.com/repos/willuhmjs/Quizlet-Exporter');
+			if (!res.ok) return;
+			const data = await res.json();
+			if (typeof data?.stargazers_count === 'number') stars = data.stargazers_count;
+		} catch {
+			// offline or rate limited; the button works without the count
+		}
+	});
 
 	const isHtml = (f: File) => /\.x?html?$/i.test(f.name) || f.type === 'text/html';
 
@@ -69,8 +84,17 @@
 			<span class="brand-dot" aria-hidden="true"></span>
 			<span class="brand-name">Quizlet Exporter</span>
 		</div>
-		<a class="gh-link" href="https://github.com/willuhmjs/Quizlet-Exporter" rel="noopener">
-			GitHub
+		<a
+			class="gh-link"
+			href={REPO_URL}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="Star Quizlet-Exporter on GitHub"
+		>
+			<svg class="star-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M12 2l2.9 6.26L21.5 9.3l-4.75 4.4 1.15 6.8L12 17.25 6.1 20.5l1.15-6.8L2.5 9.3l6.6-1.04L12 2z" />
+			</svg>
+			Star{#if stars !== null}<span class="star-count">{stars}</span>{/if}
 		</a>
 	</header>
 
@@ -147,6 +171,21 @@
 				<p>Your <kbd>.docx</kbd> downloads instantly. Every card, one tidy table.</p>
 			</li>
 		</ol>
+
+		<div class="cta">
+			<p>Useful? A star helps other students stumble onto this instead of another paywalled exporter.</p>
+			<a
+				class="star-btn"
+				href={REPO_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				<svg class="star-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+					<path d="M12 2l2.9 6.26L21.5 9.3l-4.75 4.4 1.15 6.8L12 17.25 6.1 20.5l1.15-6.8L2.5 9.3l6.6-1.04L12 2z" />
+				</svg>
+				Star on GitHub{#if stars !== null}<span class="star-count">{stars}</span>{/if}
+			</a>
+		</div>
 	</main>
 
 	<footer>
@@ -195,6 +234,9 @@
 	}
 
 	.gh-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
 		font-size: 13px;
 		font-weight: 510;
 		color: #8a8f98;
@@ -209,6 +251,70 @@
 	.gh-link:hover {
 		color: #f7f8f8;
 		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.gh-link:hover .star-icon {
+		color: #828fff;
+	}
+
+	.star-icon {
+		color: #5e6ad2;
+		flex-shrink: 0;
+	}
+
+	.star-count {
+		font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 12px;
+		padding: 0 6px;
+		border-radius: 4px;
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	.cta {
+		margin-top: 48px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		text-align: center;
+	}
+
+	.cta p {
+		font-size: 14px;
+		color: #8a8f98;
+		max-width: 420px;
+		line-height: 1.55;
+	}
+
+	.star-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 14px;
+		font-weight: 510;
+		color: #828fff;
+		text-decoration: none;
+		padding: 9px 18px;
+		border-radius: 6px;
+		background: rgba(94, 106, 210, 0.08);
+		border: 1px solid rgba(130, 143, 255, 0.35);
+		transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+	}
+
+	.star-btn:hover {
+		background: rgba(94, 106, 210, 0.22);
+		color: #f7f8f8;
+		box-shadow: 0 0 20px rgba(113, 112, 255, 0.25);
+	}
+
+	.star-btn .star-icon {
+		color: currentColor;
+	}
+
+	.star-btn .star-count {
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: #d0d6e0;
 	}
 
 	main {
@@ -241,9 +347,9 @@
 		align-items: center;
 		gap: 10px;
 		padding: 56px 24px;
-		border: 1px dashed rgba(255, 255, 255, 0.14);
+		border: 1px dashed rgba(130, 143, 255, 0.3);
 		border-radius: 12px;
-		background: rgba(255, 255, 255, 0.02);
+		background: rgba(94, 106, 210, 0.04);
 		color: #8a8f98;
 		cursor: pointer;
 		transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
